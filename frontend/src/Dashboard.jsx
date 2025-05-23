@@ -14,7 +14,7 @@ import Loading from "./Loading";
 
 
 function Dashboard() {
-  const [activeTab, setActiveTab] = useState("createTrip");
+  const [activeTab, setActiveTab] = useState("home");
   const [loading, setLoading] = useState(true);
   const [tripName, setTripName] = useState("");
   const [dateRange, setDateRange] = useState([
@@ -146,6 +146,19 @@ function Dashboard() {
         {/* Tab Navigation */}
         <div className="w-full text-center overflow-x-auto whitespace-nowrap space-x-4 md:space-x-8 mb-6 px-4 ">
   {[
+    { tab: "home", svg: (
+      <svg 
+      version="1.1" 
+      xmlns="http://www.w3.org/2000/svg"  
+      viewBox="0 0 93.2617 81.3965"
+      className="w-5 h-5 inline-block">
+      <g> 
+        <rect height="81.3965" opacity="0" width="93.2617" x="0" y="0"/> 
+        <path d="M35.4492 76.7578L57.8125 76.7578L57.8125 52.1973C57.8125 50.3418 56.6406 49.1211 54.7363 49.1211L38.5254 49.1211C36.6699 49.1211 35.4492 50.3418 35.4492 52.1973ZM3.80859 42.1387C5.0293 42.1387 6.05469 41.4551 6.93359 40.7227L45.3613 8.44727C45.752 8.10547 46.2402 7.95898 46.6309 7.95898C47.0215 7.95898 47.4609 8.10547 47.8516 8.44727L86.3281 40.7227C87.207 41.4551 88.2324 42.1387 89.4531 42.1387C91.8457 42.1387 93.2617 40.4297 93.2617 38.623C93.2617 37.6465 92.8223 36.5723 91.8945 35.791L51.5137 1.9043C49.9512 0.634766 48.291 0 46.6309 0C44.9707 0 43.2617 0.634766 41.748 1.9043L1.36719 35.791C0.439453 36.5723 0 37.6465 0 38.623C0 40.4297 1.41602 42.1387 3.80859 42.1387ZM71.0938 20.1172L81.6406 29.0039L81.6406 11.3281C81.6406 9.47266 80.4199 8.30078 78.5645 8.30078L74.1699 8.30078C72.3633 8.30078 71.0938 9.47266 71.0938 11.3281ZM20.6543 81.3477L72.5586 81.3477C78.2715 81.3477 81.6406 78.0762 81.6406 72.5098L81.6406 30.0293L74.5605 25.3418L74.5605 70.7031C74.5605 72.998 73.291 74.3164 71.0938 74.3164L22.168 74.3164C19.9707 74.3164 18.6523 72.998 18.6523 70.7031L18.6523 25.3418L11.6211 30.0293L11.6211 72.5098C11.6211 78.0762 14.9902 81.3477 20.6543 81.3477Z" 
+        fill="currentColor" /> 
+        </g> 
+      </svg>
+    ) },
     { tab: "createTrip", label: t("planTrip"), svg: (
       <svg
               version="1.1"
@@ -310,6 +323,64 @@ function Dashboard() {
 
         {/* Tab Content */}
         <div className="flex justify-center transition-all duration-300">
+
+        {activeTab === "home" && (
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 w-full sm:w-10/12 md:w-8/12 lg:w-6/12 bg-white dark:bg-gray-900 p-6 sm:p-10 rounded-lg shadow-lg hover:shadow-2xl transition-all duration-500">
+              <h2 className="text-2xl font-bold mb-4 col-span-full text-blue-500 text-center">{t('Dashboard')}</h2>
+
+              <div
+                onClick={() => setActiveTab("createTrip")}
+                className="cursor-pointer p-4 rounded bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition"
+              >
+                <h3 className="text-xl font-semibold mb-2 dark:text-gray-300">{t("planTrip")}</h3>
+                <p className="text-sm text-gray-700 dark:text-gray-300">
+                  {t("startPlanning")} 🚀
+                </p>
+              </div>
+
+              <div
+                onClick={() => setActiveTab("upcomingTrips")}
+                className="cursor-pointer p-4 rounded bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition"
+              >
+                <h3 className="text-xl font-semibold mb-2 dark:text-gray-300">{t("trips")}</h3>
+                <UpcomingTrips userId={userId} preview={true} />
+              </div>
+
+              <div
+                onClick={() => setActiveTab("accountInfo")}
+                className="cursor-pointer p-4 rounded bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition h-full flex flex-col justify-center"
+              >
+                <h3 className="text-xl font-semibold mb-2 dark:text-gray-300">{t("accountInfo")}</h3>
+                <AccountInfo preview={true} />
+              </div>
+
+              <div
+                onClick={() => setActiveTab("budgetTracking")}
+                className="cursor-pointer p-4 rounded bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition h-full flex flex-col justify-center"
+              >
+                <h3 className="text-xl font-semibold mb-2 dark:text-gray-300">{t("budgetTracking")}</h3>
+                <BudgetTracking userId={userId} preview={true} />
+              </div>
+
+              <div
+                onClick={() => setActiveTab("statistics")}
+                className="cursor-pointer p-4 rounded bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition"
+              >
+                <h3 className="text-xl font-semibold mb-2 dark:text-gray-300">{t("statistics")}</h3>
+                <UserTripStats userId={userId} preview={true} />
+              </div>
+
+              <div
+                onClick={() => setActiveTab("map")}
+                className="cursor-pointer p-4 rounded bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition"
+              >
+                <h3 className="text-xl font-semibold mb-2 dark:text-gray-300">{t("mapHead")}</h3>
+                <p className="text-sm text-gray-700 dark:text-gray-300">{t("construction")}</p>
+              </div>
+
+            </div>
+          )}
+
           {activeTab === "upcomingTrips" && (
             <div className="bg-white dark:bg-gray-900 p-6 sm:p-10 rounded-lg shadow-lg transition-all duration-500 hover:shadow-2xl w-full sm:w-10/12 md:w-8/12 lg:w-6/12">
               <h2 className="text-2xl font-bold mb-4 text-blue-500">{t('myTrips')}</h2>

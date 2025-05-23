@@ -8,7 +8,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { useTranslation } from 'react-i18next';
 import Loading from './Loading';
 
-function UpcomingTrips({ userId }) {
+function UpcomingTrips({ userId, preview }) {
   const [trips, setTrips] = useState([]);
   const [loading, setLoading] = useState(true);
   const [activeCategory, setActiveCategory] = useState('ongoing');
@@ -16,6 +16,7 @@ function UpcomingTrips({ userId }) {
 
   const navigate = useNavigate();
   const { t } = useTranslation();
+  
 
   useEffect(() => {
     if (!userId) return;
@@ -103,12 +104,60 @@ function UpcomingTrips({ userId }) {
           setUnderlineStyle({ left: `${offsetLeft}px`, width: `${offsetWidth}px` });
         }
       }, [activeCategory, hoveredTab]);
+
+      if (preview) {
+        const ongoing = tripsByCategory.ongoing;
+        const upcoming = tripsByCategory.upcoming;
+      
+        const tripsToShow = ongoing.length > 0 ? ongoing : upcoming.slice(0, 1);
+      
+        return (
+          <div className="space-y-2">
+            {tripsToShow.length > 0 ? (
+              tripsToShow.map((trip) => {
+                const category = categorizeTrips(trip);
+                const borderColor =
+                  category === "ongoing"
+                    ? "border-green-400 dark:border-green-600"
+                    : "border-blue-400 dark:border-blue-600";
+      
+                return (
+                  <div
+                    key={trip.id}
+                    className={`bg-white dark:bg-gray-900 p-4 rounded-lg shadow border-l-4 ${borderColor} cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-950 transition`}
+                    onClick={() =>
+                      handleViewTrip(
+                        trip.title,
+                        trip.start_date,
+                        trip.end_date,
+                        trip.id,
+                        trip.activities,
+                        trip.budgets,
+                        trip.accommodation_cost,
+                        trip.accommodation_entries
+                      )
+                    }
+                  >
+                    <h4 className="font-semibold text-gray-800 dark:text-gray-100">{trip.title}</h4>
+                    <p className="text-sm dark:text-gray-300">
+                      {format(new Date(trip.start_date), 'dd.MM.yyyy')} – {format(new Date(trip.end_date), 'dd.MM.yyyy')}
+                    </p>
+                  </div>
+                );
+              })
+            ) : (
+              <p className="text-gray-500 dark:text-gray-300">{t('noTripsPreview')}</p>
+            )}
+          </div>
+        );
+      }
+      
   return (
     <div className="md:p-6 p-0 text-sm sm:text-base">
       <ToastContainer theme={theme} />
       <div className="relative mb-6 border-b dark:border-gray-700">
       <div className="flex justify-center w-full max-w-lg mx-auto relative">
-        {["past", "ongoing", "upcoming"].map((category, index) => (
+        {["past", "ongoing", "upcoming"].map((category) => (
           <button
             key={category}
             ref={(el) => (tabRefs.current[category] = el)}
@@ -195,6 +244,7 @@ function UpcomingTrips({ userId }) {
 
 UpcomingTrips.propTypes = {
   userId: PropTypes.number.isRequired,
+  preview: PropTypes.bool,
 };
 
 export default UpcomingTrips;

@@ -29,7 +29,7 @@ ChartJS.register(
   Legend
 );
 
-const BudgetTracking = ({ userId }) => {
+const BudgetTracking = ({ userId, preview }) => {
   const [totals, setTotals] = useState(null);
   const [chartData, setChartData] = useState(null);
   const [chartType, setChartType] = useState('doughnut');
@@ -188,6 +188,19 @@ const BudgetTracking = ({ userId }) => {
     }
   };
 
+  if (preview) {
+    if (isLoading) return <Loading />;
+  
+    return (
+      <div className="flex flex-col justify-center items-center h-full w-full rounded-lg text-center py-6">
+        <h4 className="text-gray-700 dark:text-gray-100 font-semibold text-lg mb-1">{t('totalCost')}</h4>
+        <p className="text-xl text-blue-500 dark:text-blue-400 font-bold">
+          {totals?.totalOverallCost || 0} CZK
+        </p>
+      </div>
+    );
+  }
+  
   return (
     <div className="budget-tracking">
       {totals && (
@@ -268,6 +281,7 @@ const BudgetTracking = ({ userId }) => {
 
 BudgetTracking.propTypes = {
   userId: PropTypes.number.isRequired,
+  preview: PropTypes.bool,
 };
 
 export default BudgetTracking;

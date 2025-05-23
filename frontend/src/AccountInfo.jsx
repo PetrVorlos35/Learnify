@@ -3,9 +3,10 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useTranslation } from 'react-i18next';
 import Loading from './Loading';
+import PropTypes from 'prop-types';
 
 
-function AccountInfo() {
+function AccountInfo({preview}) {
     const navigate = useNavigate();
   const [userInfo, setUserInfo] = useState({
     id: null,
@@ -68,6 +69,33 @@ function AccountInfo() {
     localStorage.removeItem('token');
     navigate('/login');
   };
+
+  if (preview) {
+    return (
+      <div className="flex flex-col items-center justify-center text-center p-4 rounded-lg h-full">
+        {userInfo.profilovka || userInfo.email ? (
+          <img
+            src={
+              userInfo.profilovka
+                ? userInfo.profilovka
+                : `https://api.dicebear.com/7.x/pixel-art/svg?seed=${userInfo.email}`
+            }
+            alt="Profile"
+            className="w-16 h-16 rounded-full border-2 border-gray-300 dark:border-gray-600 mb-2"
+          />
+        ) : (
+          <div className="w-16 h-16">
+            <Loading />
+          </div>
+        )}
+        <p className="text-md font-semibold text-gray-800 dark:text-gray-100">
+          {userInfo.prezdivka || `${userInfo.jmeno} ${userInfo.prijmeni}`}
+        </p>
+        <p className="text-sm text-gray-500 dark:text-gray-400 truncate">{userInfo.email}</p>
+      </div>
+    );
+  }
+  
 
   return (
 <div className="bg-white dark:bg-gray-900 p-8 sm:p-10 rounded-xl shadow-lg transition-all duration-500 hover:shadow-2xl w-full sm:w-10/12 md:w-8/12 lg:w-6/12">
@@ -192,5 +220,10 @@ function AccountInfo() {
 
   );
 }
+
+AccountInfo.propTypes = {
+  preview: PropTypes.bool,
+};
+
 
 export default AccountInfo;

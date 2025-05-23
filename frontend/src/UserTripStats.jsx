@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import { FaRoute, FaClock, FaRuler, FaArrowUp, FaArrowDown, FaListUl } from "react-icons/fa";
 import Loading from "./Loading";
 
-const UserTripStats = ({ userId }) => {
+const UserTripStats = ({ userId, preview }) => {
     const { t } = useTranslation();
     const [stats, setStats] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -41,50 +41,71 @@ const UserTripStats = ({ userId }) => {
     if (!userId || loading) return <Loading />;
 
 
-    return (
+    if (!stats || stats.tripCount === 0) {
+        return (
+          <div className="p-4 bg-gray-100 dark:bg-gray-800 rounded-xl shadow max-w-xl mx-auto">
+            <p className="text-red-500 dark:text-red-400 text-center">{t("noDataFound")}</p>
+          </div>
+        );
+      }
+      
+      const statOptions = [
+        {
+          icon: <FaRoute />,
+          label: t("totalDistance"),
+          value: `${stats.totalDistance || 0}`,
+        },
+        {
+          icon: <FaClock />,
+          label: t("totalTime"),
+          value: stats.totalTime || "0",
+        },
+        {
+          icon: <FaRuler />,
+          label: t("averageDistancePerTrip"),
+          value: `${stats.avgDistancePerTrip || 0}`,
+        },
+        {
+          icon: <FaArrowUp />,
+          label: t("longestTrip"),
+          value: stats.longestTrip ? `${stats.longestTrip.distance} km (${stats.longestTrip.duration})` : "0 km (0h)",
+        },
+        {
+          icon: <FaArrowDown />,
+          label: t("shortestTrip"),
+          value: stats.shortestTrip ? `${stats.shortestTrip.distance} km (${stats.shortestTrip.duration})` : "0 km (0h)",
+        },
+        {
+          icon: <FaListUl />,
+          label: t("totalTrips"),
+          value: stats.tripCount || 0,
+        },
+      ];
+      
+      if (preview) {
+        const randomStat = statOptions[Math.floor(Math.random() * statOptions.length)];
+      
+        return (
+          <div className="p-4 rounded-xl mx-auto">
+            <StatItem {...randomStat} />
+          </div>
+        );
+      }
+      
+      return (
         <div className="p-6 bg-gray-100 dark:bg-gray-800 rounded-xl shadow-lg max-w-2xl mx-auto">
-               {(!stats || stats?.tripCount === 0) ? (
-                <p className="text-red-500 dark:text-red-400 text-center">{t("noDataFound")}</p>
-            ) : (
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <StatItem 
-                        icon={<FaRoute />} 
-                        label={t("totalDistance")} 
-                        value={`${stats.totalDistance || 0} `} 
-                    />
-                    <StatItem 
-                        icon={<FaClock />} 
-                        label={t("totalTime")} 
-                        value={stats.totalTime || '0'} 
-                    />
-                    <StatItem 
-                        icon={<FaRuler />} 
-                        label={t("averageDistancePerTrip")} 
-                        value={`${stats.avgDistancePerTrip || 0} `} 
-                    />
-                    <StatItem 
-                        icon={<FaArrowUp />} 
-                        label={t("longestTrip")} 
-                        value={stats.longestTrip ? `${stats.longestTrip.distance} km (${stats.longestTrip.duration})` : '0 km (0h)'} 
-                    />
-                    <StatItem 
-                        icon={<FaArrowDown />} 
-                        label={t("shortestTrip")} 
-                        value={stats.shortestTrip ? `${stats.shortestTrip.distance} km (${stats.shortestTrip.duration})` : '0 km (0h)'} 
-                    />
-                    <StatItem 
-                        icon={<FaListUl />} 
-                        label={t("totalTrips")} 
-                        value={stats.tripCount || 0} 
-                    />
-                </div>
-            )}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {statOptions.map((stat, index) => (
+              <StatItem key={index} {...stat} />
+            ))}
+          </div>
         </div>
-    );
+      );
+      
 };
 
 const StatItem = ({ icon, label, value }) => (
-    <div className="flex flex-col items-center justify-center bg-white dark:bg-gray-900 rounded-lg p-5 shadow-md text-center">
+    <div className="flex flex-col items-center justify-center  rounded-lg p-5  text-center">
         <div className="text-gray-900 dark:text-gray-200 text-3xl">{icon}</div>
         <p className="text-gray-500 dark:text-gray-400 text-sm mt-2">{label}</p>
         <p className="text-xl font-semibold text-gray-900 dark:text-white mt-1">{value}</p>
@@ -99,6 +120,7 @@ StatItem.propTypes = {
 
 UserTripStats.propTypes = {
     userId: PropTypes.number.isRequired,
+    preview: PropTypes.bool,
 };
 
 export default UserTripStats;

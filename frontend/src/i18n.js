@@ -167,6 +167,8 @@ i18n
           exitWarning: "Warning: This will discard all unsaved changes!",
           noDescription: "No description",
           NoDataAvailable: "No data available",
+          noTripsPreview: "You currently have no trips to display",
+          startPlanning: "Click to start a new trip",
         },
       },
       cs: {
@@ -218,7 +220,7 @@ i18n
           tripsOngoing: "Probíhající výlety",
           tripsUpcoming: "Nadcházející výlety",
           noActivities: "Žádné konkrétní aktivity",
-          totalCost: "Celková cena",
+          totalCost: "Celková útrata",
           budgetChart: "Vyberte typ grafu:",
           Doughnut: "Prstencový graf",
           Bar: "Sloupcový graf",
@@ -329,6 +331,8 @@ i18n
           exitWarning: "Varování: Tímto se zahodí všechny neuložené změny!",  
           noDescription: "Bez popisu",
           NoDataAvailable: "Žádná data k dispozici",
+          noTripsPreview: "Zatím nemáte žádný výlet k zobrazení",
+          startPlanning: "Klikněte a začněte nový výlet"
         },
       },
     },
